@@ -53,24 +53,24 @@ go get github.com/BurtsevAnton/packages
             resourceCode := fmt.Sprintf("%s_%s", method, path)
 
             isAccessAllowed := service.IsAccessAllowed(tt.args.roleId, resourceCode)
-	        if !isAccessAllowed {
-	            c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"Message": "Доступ запрещен!"})
+            if !isAccessAllowed {
+                c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"Message": "Доступ запрещен!"})
 
-	    	    return
-	    	}
-	    	c.Next()
-	    })
+            return
+            }
+            c.Next()
+        })
 
-	    group.POST("/test_create", func(c *gin.Context) {
-	    	c.JSON(http.StatusOK, gin.H{"Message": "Доступ на чтение разрешен"})
-	    })
-	    group.GET("/test_get", func(c *gin.Context) {
-	    	c.JSON(http.StatusOK, gin.H{"Message": "Доступ на изменение разрешен"})
-	    })
-	    group.DELETE("/test_delete", func(c *gin.Context) {
-	    	c.JSON(http.StatusOK, gin.H{"Message": "Доступ на удаление разрешен"})
-	    })
-	}
+        group.POST("/test_create", func(c *gin.Context) {
+            c.JSON(http.StatusOK, gin.H{"Message": "Доступ на чтение разрешен"})
+        })
+        group.GET("/test_get", func(c *gin.Context) {
+            c.JSON(http.StatusOK, gin.H{"Message": "Доступ на изменение разрешен"})
+        })
+        group.DELETE("/test_delete", func(c *gin.Context) {
+            c.JSON(http.StatusOK, gin.H{"Message": "Доступ на удаление разрешен"})
+        })
+    }
 
 ```
 
