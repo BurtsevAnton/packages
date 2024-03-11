@@ -379,6 +379,24 @@ func Test_CheckApiAccess_WithoutInternalMW(t *testing.T) {
 			},
 			wantCode: http.StatusForbidden,
 		},
+		{
+			name: "Test_CheckApiAccess_4_DELETE_/api/test_delete/:id",
+			args: args{
+				roleId: 4,
+				route:  "/api/test_delete/1",
+				method: "DELETE",
+			},
+			wantCode: http.StatusForbidden,
+		},
+		{
+			name: "Test_CheckApiAccess_4_DELETE_/api/test_delete/:id",
+			args: args{
+				roleId: 2,
+				route:  "/api/test_delete/1",
+				method: "DELETE",
+			},
+			wantCode: http.StatusOK,
+		},
 	}
 
 	for _, tt := range tests {
@@ -410,6 +428,10 @@ func Test_CheckApiAccess_WithoutInternalMW(t *testing.T) {
 				})
 				group.DELETE("/test_delete", func(c *gin.Context) {
 					c.JSON(http.StatusOK, gin.H{"Message": "Доступ на удаление разрешен"})
+				})
+				group.DELETE("/test_delete/:id", func(c *gin.Context) {
+					id := c.Param("id")
+					c.JSON(http.StatusOK, gin.H{"Message": "Доступ на удаление ресурса с id " + id + " разрешен"})
 				})
 			}
 

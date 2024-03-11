@@ -2,6 +2,8 @@ package access
 
 import (
 	"encoding/json"
+	"regexp"
+	"strings"
 	"sync"
 )
 
@@ -30,6 +32,20 @@ func (s *Service) IsAccessAllowed(roleId int, resourceCode string) bool {
 	if policy, ok := s.access.Levels[roleId][resourceCode]; ok {
 
 		return policy.UserAccessLevel&policy.RequiredAccessLevel == policy.RequiredAccessLevel
+	}
+
+	// Если статичный путь не найден, то проверяем динамичные (шаблонные) пути.
+	for key := range s.access.Levels[roleId] {
+		keyMod := strings.ReplaceAll(key, `/`, `\/`)
+		keyMod = strings.ReplaceAll(keyMod, `{%s}`, `[\w-]+`)
+		r := regexp.MustCompile("^" + keyMod + "$")
+
+		if r.MatchString(resourceCode) {
+			if policy, ok := s.access.Levels[roleId][key]; ok {
+
+				return policy.UserAccessLevel&policy.RequiredAccessLevel == policy.RequiredAccessLevel
+			}
+		}
 	}
 
 	return false
